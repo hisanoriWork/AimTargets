@@ -1,0 +1,44 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+public class TPSCamera : MonoBehaviour
+{
+    public Transform c; //cameraTransform
+    public Transform t;
+    public Vector3 fwd;
+    private float mTDist = 2.0f; //mTargetDistance
+    private float mHDist = 5.0f; // mHorizenDistance
+    private float mVDist = 2.0f; // mVerticalDistance
+    private float mK = 1000.0f; //mSpringConstant
+    private Vector3 mAPos; //mActualPosition
+    private Vector3 mVel; //mVelocity
+    public Vector3 angle;
+    public float pitchSpeed = 1f; //pitchSpeed
+    public float maxPitch = Mathf.PI / 3.0f;
+    public float pitch = 0.0f;
+    public void Start()
+    {
+        c.position = ComputeCameraPos();
+        fwd = Vector3.forward;
+    }
+
+
+    public void FixedUpdate()
+    {
+        Vector3 iPos = ComputeCameraPos(); //idealPosition
+        Vector3 target = t.position + fwd * mTDist;
+        Vector3 diff = mAPos - iPos; // difference
+        Vector3 acel = -mK * diff - 2.0f * Mathf.Sqrt(mK) * mVel;
+        mVel += acel * Time.fixedDeltaTime;
+        mAPos += mVel * Time.fixedDeltaTime;
+        c.rotation = Quaternion.LookRotation(target - mAPos);
+        c.position = mAPos;
+    }    
+
+    Vector3 ComputeCameraPos(){
+        Vector3 iPos = t.position;
+        iPos -= fwd * mHDist;
+        iPos += Vector3.up * mVDist;
+        return iPos;
+    }
+}
