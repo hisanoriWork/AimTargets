@@ -10,6 +10,9 @@ public class TargetManager : MonoBehaviour
     public float dx,dy;
     public int maxX, maxY;
     public GameObject target;
+    public IObservable<Unit> onTargetBreak { get { return mTargetBreakSubject; } }
+    protected Subject<Unit> mTargetBreakSubject = new Subject<Unit>();
+
     [System.NonSerialized] public Vector3 anker;
     [System.NonSerialized] public Dictionary<TargetC, Tuple<int, int>> targetList;
     [System.NonSerialized] public int point = 0;
@@ -18,17 +21,7 @@ public class TargetManager : MonoBehaviour
         anker = targetPosTransform.position - new Vector3(maxX * dx / 2f, maxY * dy / 2f, 0f);
         targetList = new Dictionary<TargetC, Tuple<int, int>>();
     }
-
-    void Start()
-    {
-        CreateTarget();
-        CreateTarget();
-        CreateTarget();
-    }
-    void FixedUpdate()
-    {
-        
-    }
+    
     public void CreateTarget() {
 
         while (true) {
@@ -36,7 +29,6 @@ public class TargetManager : MonoBehaviour
             int numY = UnityEngine.Random.Range(0, maxY);
             if (!SearchTargetPosList(numX, numY)) {
                 GameObject obj = Instantiate(target, anker + Vector3.right * dx * numX + Vector3.up * dy * numY, Quaternion.identity, targetPosTransform);
-                //GameObject obj = Instantiate(target, anker, Quaternion.identity, targetPosTransform);
                 TargetC t = obj.transform.GetComponent<TargetC>();
                 t.onBreak.Subscribe(_ => TargetBreak(t));
                 targetList[t] = new Tuple<int, int>(numX, numY);
@@ -60,6 +52,7 @@ public class TargetManager : MonoBehaviour
     void TargetBreak(TargetC target) {
         if (targetList.ContainsKey(target))
         {
+            mTargetBreakSubject.OnNext(Unit.Default);
             targetList.Remove(target);
             point += 100;
             num--;

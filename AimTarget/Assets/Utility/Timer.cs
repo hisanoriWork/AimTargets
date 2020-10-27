@@ -3,8 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using System;
+using UnityEngine.Events;
 public class Timer : MonoBehaviour
 {
+    [System.Serializable]
+    public class MyIntEvent : UnityEvent<int>
+    {
+    }
+
+    [System.Serializable]
+    public class MyFloatEvent : UnityEvent<float>
+    {
+    }
+    public MyIntEvent onDigitalCountEvent;
+    public MyFloatEvent onAnalogCountEvent;
+    public UnityEvent onTimeUpEvent;
     [Range(0, 1000)] public float time;
     public float analogTime { get { return m_analogTime; } }
     public int digitalTime { get { return m_digitalTime; } }
@@ -37,10 +50,17 @@ public class Timer : MonoBehaviour
         {
             m_analogTime += -Time.fixedDeltaTime;
             analogSubject.OnNext(m_analogTime);
+            onAnalogCountEvent.Invoke(m_analogTime);
             if (m_digitalTime != (m_digitalTime = (int)m_analogTime))
+            {
                 digitalSubject.OnNext(m_digitalTime);
+                onDigitalCountEvent.Invoke(m_digitalTime);
+            }
             if (m_analogTime <= 0f)
+            {
                 isUpSubject.OnNext(Unit.Default);
+                onTimeUpEvent.Invoke();
+            }
         }
     }
     /*****public method*****/

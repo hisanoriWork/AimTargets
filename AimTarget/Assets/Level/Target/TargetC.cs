@@ -11,8 +11,11 @@ public class TargetC : MonoBehaviour
     public IObservable<Unit> onBreak
     { get { return mBreakSubject; } }
     protected Subject<Unit> mBreakSubject = new Subject<Unit>();
+    public IObservable<Unit> onDamage{ get { return mDamageSubject; } }
+    protected Subject<Unit> mDamageSubject = new Subject<Unit>();
     public void Damage(int i)
     {
+        mDamageSubject.OnNext(Unit.Default);
         if (instant)
         {
             Break();

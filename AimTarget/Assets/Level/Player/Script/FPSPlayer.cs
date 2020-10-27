@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
+using UniRx;
 namespace my{
     public class FPSPlayer : MonoBehaviour
     {
@@ -20,14 +21,21 @@ namespace my{
         public Curve jumpCurve;
         public float onGHeight = 0.2f; //onGroundHeight
         /*shot*/
-        Transform shotT;
+        public LineRenderer lineRenderer;
+        public Transform shotT;
         public Transform cameraT;
+        RaycastHit hit;
+        public IObservable<Unit> onShot
+        { get { return mShotSubject; } }
+        protected Subject<Unit> mShotSubject = new Subject<Unit>();
+
+        /*****monobehaviour method*****/
         void Update()
         {
+            ComputeMousePoint();
+            MouseEvent();
             if (Input.GetMouseButtonDown(0))
-            {
                 Shot();
-            }
         }
         void FixedUpdate()
         {
@@ -44,16 +52,15 @@ namespace my{
             if (Input.GetKey(KeyCode.S))
                 fwdSp -= 7.0f;
             if (Input.GetKey(KeyCode.A))
-                stfSp -= 3.0f;
+                stfSp -= 5.0f;
             if (Input.GetKey(KeyCode.D))
-                stfSp += 3.0f;
+                stfSp += 5.0f;
             if (fwdSp * fwdSp > 0.01f)
                 pos += transform.forward * fwdSp * dt;
             if (stfSp * stfSp > 0.01f)
                 pos += transform.right * stfSp * dt;
             transform.position = pos;
         }
-        
 
         void CheckRotate() {
             float dt = Time.fixedDeltaTime;
@@ -62,25 +69,72 @@ namespace my{
             transform.rotation = Quaternion.AngleAxis(ys * dt, transform.up) * transform.rotation;
         }
 
+        void ComputeMousePoint()
+        {
+            if (cameraT)
+            {
+                //lineRenderer.SetPosition(0, shotT.position);
+                Physics.Raycast(cameraT.position, cameraT.forward, out hit);
+                //if (hit.transform)
+                //{
+                //    lineRenderer.SetPosition(1, hit.point);
+                //}
+                //else
+                //{
+                //    lineRenderer.SetPosition(1, cameraT.position + cameraT.forward * 10000f);
+                //}
+            }
+        }
+
+        void MouseEvent()
+        {
+            MousePointee m;
+            if (!hit.transform) return;
+            m = hit.transform.GetComponent<MousePointee>();
+            if (m == null) return;
+            m.onEvent.Invoke();
+            if (Input.GetMouseButton(0))
+                m.clickEvent.Invoke();
+            if (Input.GetMouseButtonDown(0))
+                m.downEvent.Invoke();
+            if (Input.GetMouseButtonUp(0))
+                m.upEvent.Invoke();
+        }
+
+        public void SetMouseCursorVisible(bool f)
+        {
+            if (f)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+        }
 
         void Shot()
         {
-
-            RaycastHit hit;
-            if (cameraT)
-            {
-                if (Physics.Raycast(cameraT.position, cameraT.forward, out hit))
-                {
-                    TargetC target = hit.transform.GetComponent<TargetC>();
-                    if (target != null)
-                    {
-                        target.Damage(10);
-                    }
-                }
-                Debug.DrawRay(cameraT.position, cameraT.forward * hit.distance, Color.yellow);
-            }
-            
+                mShotSubject.OnNext(Unit.Default);
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         //void Jump()
         //{
         //    rb.AddForce(Vector3.up * jumpPower, ForceMode.VelocityChange);

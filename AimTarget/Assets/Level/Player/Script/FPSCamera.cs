@@ -8,9 +8,9 @@ namespace my
     {
         public Transform c; //camera
         public FPSPlayer player;
-        public float pitchSpeed; //PitchSpeed
-        public float maxPitch;
-        public float pitch;
+        [System.NonSerialized] public float pitchSpeed; //PitchSpeed
+        [System.NonSerialized] public float maxPitch;
+        [System.NonSerialized] public float pitch;
         public Vector3 cameraHeight;
         void Start(){
             maxPitch = 45;

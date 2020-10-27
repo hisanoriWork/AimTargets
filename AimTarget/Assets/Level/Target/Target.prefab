@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7717266625400637168}
   - component: {fileID: 2179282096509788038}
   - component: {fileID: 2659453982868534950}
+  - component: {fileID: 3505137487380032393}
   m_Layer: 0
   m_Name: Target
   m_TagString: Untagged
@@ -106,3 +107,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 594f75c368276404faff636434ff9c7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HP: 100
+  maxHP: 100
+  instant: 1
+--- !u!114 &3505137487380032393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5092895536394999769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed58611536a798645a6327f9e7337f17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  downEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2659453982868534950}
+        m_MethodName: Damage
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 10
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  upEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  clickEvent:
+    m_PersistentCalls:
+      m_Calls: []
