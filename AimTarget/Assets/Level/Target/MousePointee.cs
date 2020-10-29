@@ -9,4 +9,5 @@ public class MousePointee : MonoBehaviour
     public UnityEvent downEvent;
     public UnityEvent upEvent;
     public UnityEvent clickEvent;
+    public UnityEvent offEvent;
 }

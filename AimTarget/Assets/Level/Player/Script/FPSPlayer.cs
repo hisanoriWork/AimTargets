@@ -25,6 +25,7 @@ namespace my{
         public Transform shotT;
         public Transform cameraT;
         RaycastHit hit;
+        MousePointee beforeMousePointee = null;
         public IObservable<Unit> onShot
         { get { return mShotSubject; } }
         protected Subject<Unit> mShotSubject = new Subject<Unit>();
@@ -64,8 +65,8 @@ namespace my{
 
         void CheckRotate() {
             float dt = Time.fixedDeltaTime;
-            ps = 1000 * -Input.GetAxis("Mouse Y");
-            ys = 1000 * Input.GetAxis("Mouse X");
+            ps = 200 * -Input.GetAxis("Mouse Y");
+            ys = 200 * Input.GetAxis("Mouse X");
             transform.rotation = Quaternion.AngleAxis(ys * dt, transform.up) * transform.rotation;
         }
 
@@ -89,9 +90,17 @@ namespace my{
         void MouseEvent()
         {
             MousePointee m;
-            if (!hit.transform) return;
+            if (!hit.transform){
+                beforeMousePointee = null;
+                return;
+            }
             m = hit.transform.GetComponent<MousePointee>();
-            if (m == null) return;
+            if (beforeMousePointee != null && beforeMousePointee != m)
+                beforeMousePointee.offEvent.Invoke();
+            if (m == null){
+                beforeMousePointee = null;
+                return;
+            }
             m.onEvent.Invoke();
             if (Input.GetMouseButton(0))
                 m.clickEvent.Invoke();
@@ -99,6 +108,8 @@ namespace my{
                 m.downEvent.Invoke();
             if (Input.GetMouseButtonUp(0))
                 m.upEvent.Invoke();
+            beforeMousePointee = m;
+            return;
         }
 
         public void SetMouseCursorVisible(bool f)

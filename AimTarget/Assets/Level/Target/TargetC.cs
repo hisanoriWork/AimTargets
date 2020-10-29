@@ -31,7 +31,7 @@ public class TargetC : MonoBehaviour
     public void Break()
     {
         mBreakSubject.OnNext(Unit.Default);
-        gameObject.SetActive(false);
+        Destroy(gameObject);
     }
 
     public void Reset()

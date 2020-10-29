@@ -14,8 +14,7 @@ public class TargetManager : MonoBehaviour
     protected Subject<Unit> mTargetBreakSubject = new Subject<Unit>();
 
     [System.NonSerialized] public Vector3 anker;
-    [System.NonSerialized] public Dictionary<TargetC, Tuple<int, int>> targetList;
-    [System.NonSerialized] public int point = 0;
+    [System.NonSerialized] public IDictionary<TargetC, Tuple<int, int>> targetList;
     [System.NonSerialized] public int num = 0;
     void Awake() {
         anker = targetPosTransform.position - new Vector3(maxX * dx / 2f, maxY * dy / 2f, 0f);
@@ -53,11 +52,27 @@ public class TargetManager : MonoBehaviour
         if (targetList.ContainsKey(target))
         {
             mTargetBreakSubject.OnNext(Unit.Default);
-            targetList.Remove(target);
-            point += 100;
+            RemoveTarget(target);
             num--;
             if (num < 3) CreateTarget();
         }
     }
-    
+
+    public void RemoveTarget(TargetC target)
+    {
+        targetList.Remove(target);
+    }
+
+    public void ClearTarget()
+    {
+        foreach (var i in targetList.Keys)
+        {
+            Destroy(i.gameObject);
+        }
+        targetList.Clear();
+        num = 0;
+
+    }
+
+
 }
