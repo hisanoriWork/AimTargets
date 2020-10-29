@@ -1,7 +1,7 @@
 ﻿//using UnityEngine;
 //using System.Collections;
 
-//namespace my
+//namespace My
 //{
 //    [RequireComponent(typeof(Animator))]
 //    [RequireComponent(typeof(CapsuleCollider))]

@@ -3056,6 +3056,14 @@ MonoBehaviour:
   - {fileID: 595108}
   - {fileID: 1511096689}
   mysr: {fileID: 4847394495762980249}
+  scoreList: 000000000000000000000000000000000000000000000000
+  rateList:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
 --- !u!1 &1601007456
 GameObject:
   m_ObjectHideFlags: 0
@@ -3107,6 +3115,7 @@ MonoBehaviour:
   maxX: 8
   maxY: 4
   target: {fileID: 5092895536394999769, guid: fc73be30a959cd246ba785a67ee06ca1, type: 3}
+  num: 0
 --- !u!114 &1601007459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3119,9 +3128,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 848c89f5ef5800848b79a40a777331cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetManager: {fileID: 1601007458}
-  timer: {fileID: 1601007460}
-  timeUI: {fileID: 2037793647}
   scoreUI: {fileID: 1220159717}
   rateUI: {fileID: 1025876488}
   player: {fileID: 311027333}
@@ -3131,9 +3137,8 @@ MonoBehaviour:
   score: 0
   startScreen: {fileID: 1302944354}
   resultScreen: {fileID: 5878819592438145505}
-  sr: {fileID: 0}
   gameCanvas: {fileID: 1390188096}
-  resultCon: {fileID: 1545338397}
+  resultController: {fileID: 1545338397}
 --- !u!114 &1601007460
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3156,6 +3161,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   time: 4
+  isReturning: 1
+  isRooping: 0
 --- !u!1001 &1625278023
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4490,6 +4497,7 @@ GameObject:
   - component: {fileID: 2037793646}
   - component: {fileID: 2037793648}
   - component: {fileID: 2037793647}
+  - component: {fileID: 2037793649}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -4556,6 +4564,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2037793645}
   m_CullTransparentMesh: 0
+--- !u!114 &2037793649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2037793645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a244752cbca44754995b93040ad7e685, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timer: {fileID: 1601007460}
+  isUpdating: 1
 --- !u!1001 &2065480305
 PrefabInstance:
   m_ObjectHideFlags: 0
