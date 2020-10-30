@@ -39,6 +39,7 @@ namespace My {
       }
     }
     protected int mVolume;
+    protected float pitchDeviation = 0.2f;
     [SerializeField] protected AudioSource m_audioSource;
     [SerializeField] protected List<AudioClipInfo> m_clipList;
     protected Dictionary<string, AudioClip> m_clipDictionary = new Dictionary<string, AudioClip>();
@@ -55,7 +56,10 @@ namespace My {
       m_clipList.Clear();
       volume = PlayerPrefs.GetInt("SEVolume", 40);
     }
-    
+
+    void Update() {
+      m_audioSource.pitch = UnityEngine.Random.Range(1f - pitchDeviation, 1f + pitchDeviation);
+    }
     public void Play(AudioClip clip) {
       if (clip)
         m_audioSource.PlayOneShot(clip);

@@ -14,6 +14,7 @@ namespace My {
     public IObservable<Unit> onDamage { get { return mDamageSubject; } }
     protected Subject<Unit> mDamageSubject = new Subject<Unit>();
     public void Damage(int i) {
+      SEManager.instance.Play("TargetHit");
       mDamageSubject.OnNext(Unit.Default);
       if (instant) {
         Break();

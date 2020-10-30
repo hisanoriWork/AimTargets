@@ -4763,12 +4763,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scoreUI: {fileID: 1220159717}
   rateUI: {fileID: 1025876488}
-  player: {fileID: 311027333}
   startScreen: {fileID: 1302944354}
   resultScreen: {fileID: 5878819592438145505}
   settingScreen: {fileID: 1987556406}
   gameCanvas: {fileID: 1390188096}
   resultController: {fileID: 1545338397}
+  player: {fileID: 311027333}
   oddCurve:
     curve:
       serializedVersion: 2
@@ -6431,6 +6431,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1536618515707405177, guid: 1ab77ba68750dc74c8dc3c62756bf265,
+        type: 3}
+      propertyPath: m_clipList.Array.data[3].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 814ae29459470f845b19b955cd776f89, type: 3}
+    - target: {fileID: 1536618515707405177, guid: 1ab77ba68750dc74c8dc3c62756bf265,
+        type: 3}
+      propertyPath: m_clipList.Array.data[2].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 3c399901e1c7b114ba32fc57f01de820, type: 3}
     - target: {fileID: 1536618515707405179, guid: 1ab77ba68750dc74c8dc3c62756bf265,
         type: 3}
       propertyPath: m_Name
@@ -7583,9 +7593,9 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1327617465, guid: a7b4c1be95bf1934c84b96b58a3b4a4e, type: 3}
-      propertyPath: lineRenderer
-      value: 
+    - target: {fileID: 163439386, guid: a7b4c1be95bf1934c84b96b58a3b4a4e, type: 3}
+      propertyPath: time
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 1327617465, guid: a7b4c1be95bf1934c84b96b58a3b4a4e, type: 3}
       propertyPath: cameraT
@@ -7656,11 +7666,6 @@ PrefabInstance:
       propertyPath: c
       value: 
       objectReference: {fileID: 963194228}
-    - target: {fileID: 8565106657813531005, guid: a7b4c1be95bf1934c84b96b58a3b4a4e,
-        type: 3}
-      propertyPath: cameraHeight.y
-      value: 1.7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a7b4c1be95bf1934c84b96b58a3b4a4e, type: 3}
 --- !u!1001 &3157263878056103395

@@ -18,6 +18,7 @@ namespace My {
     public LineRenderer lineRenderer;
     public Transform shotT;
     public Transform cameraT;
+    public Timer FootstepsTimer;
     /*****private field*****/
     float mFwdSpeed;
     float mStfSpeed;
@@ -28,9 +29,12 @@ namespace My {
     /*****event field*****/
     public IObservable<Unit> onShot { get { return mShotSubject; } }
     protected Subject<Unit> mShotSubject = new Subject<Unit>();
+    public IObservable<Unit> onMove { get { return mMoveSubject; } }
+    protected Subject<Unit> mMoveSubject = new Subject<Unit>();
     /*****monobehaviour method*****/
     void Awake() {
       dpi = PlayerPrefs.GetInt("DPI", 20);
+      FootstepsTimer.whenTimeIsUp.Subscribe(_ => SEManager.instance.Play("足音"));
     }
     void Update() {
       ComputeMousePoint();
@@ -65,8 +69,13 @@ namespace My {
         mStfSpeed -= 5.0f;
       if (Input.GetKey(KeyCode.D))
         mStfSpeed += 5.0f;
-      if (mFwdSpeed * mFwdSpeed > 0.01f)
+      if (mFwdSpeed * mFwdSpeed > 0.01f) {
         pos += transform.forward * mFwdSpeed * dt;
+        mMoveSubject.OnNext(Unit.Default);
+        FootstepsTimer.Play();
+      } else {
+        FootstepsTimer.Stop();
+      }
       if (mStfSpeed * mStfSpeed > 0.01f)
         pos += transform.right * mStfSpeed * dt;
       transform.position = pos;
@@ -112,6 +121,7 @@ namespace My {
     }
     void Shot() {
       mShotSubject.OnNext(Unit.Default);
+      SEManager.instance.Play("ハンドガン");
     }
   }
 }

@@ -103,7 +103,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 0.7111111
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -141,4 +141,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_audioSource: {fileID: 1536618515707405176}
-  m_clipList: []
+  m_clipList:
+  - name: "\u8DB3\u97F3"
+    clip: {fileID: 8300000, guid: 677930c6e3d2cf740b02772b91c7a1c1, type: 3}
+  - name: "\u30DC\u30BF\u30F3"
+    clip: {fileID: 8300000, guid: 4cab7c60c0d4e5b42b5e6ab337c6b099, type: 3}
+  - name: "\u30CF\u30F3\u30C9\u30AC\u30F3"
+    clip: {fileID: 8300000, guid: 527268e0fc9fbc945ac6e8a9c1ef4301, type: 3}
+  - name: TargetHit
+    clip: {fileID: 8300000, guid: 1458b4a23cb86694da2e84980e17db4c, type: 3}
