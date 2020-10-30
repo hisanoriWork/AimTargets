@@ -8,18 +8,51 @@ using UnityEngine.UI;
 namespace My {
   public class GameManager : MonoBehaviour {
     /*****public field*****/
+    /*UI*/
     public Text scoreUI;
     public Text rateUI;
-    public FPSPlayer player;
-    public float rate = 100;
-    public int shotCount = 0;
-    public int hitCount = 0;
-    public int score = 0;
     public GameObject startScreen;
     public GameObject resultScreen;
+    public GameObject settingScreen;
     public Canvas gameCanvas;
     public ResultController resultController;
+    /*Game*/
+    public FPSPlayer player;
+    public Curve oddCurve;
+    public float rate {
+      get { return mRate; }
+      set {
+        mRate = value;
+        rateUI.text = ((int)mRate).ToString() + "%";
+      }
+    }
+    public int shotCount {
+      get { return mShotCount; }
+      set {
+        mShotCount = value;
+        rate = shotCount > 0 ? (float)hitCount / (float)shotCount * 100f : 100f;
+        rateUI.text = ((int)rate).ToString() + "%";
+      }
+    }
+    public int hitCount {
+      get { return mHitCount; }
+      set {
+        mHitCount = value;
+        rate = shotCount > 0 ? (float)hitCount / (float)shotCount * 100f : 100f;
+        rateUI.text = ((int)rate).ToString() + "%";
+      }
+    }
+    public int score {
+      get { return mScore; }
+      set { mScore = value; scoreUI.text = score.ToString(); }
+    }
     /*****private field*****/
+    /*Game*/
+    int mScore;
+    float mRate = 100f;
+    int mShotCount;
+    int mHitCount;
+    int mShotToShot = 0;
     TargetManager mTargetManager;
     Timer mTimer;
     /*****monobehaviour method*****/
@@ -29,12 +62,14 @@ namespace My {
       //startScreen.SetActive(true);
       player.SetMouseCursorVisible(false);
       mTimer.Stop();
+      Reset();
     }
     void Update() {
       if (Input.GetKey(KeyCode.Escape)) Quit();
     }
     /*****public method*****/
     public void StartGame() {
+      Reset();
       mTimer.Play();
       TriggerGameSet();
       TriggerGameDataRegister();
@@ -46,6 +81,7 @@ namespace My {
     void TriggerGameSet() {
       mTimer.whenTimeIsUp.Take(1).Subscribe(time => {
         resultScreen.SetActive(true);
+        settingScreen.SetActive(true);
         mTargetManager.ClearTarget();
         resultController.Register(score, rate);
         Reset();
@@ -56,13 +92,14 @@ namespace My {
       IDisposable disp2;
       disp1 = player.onShot.Subscribe(_ =>{
         shotCount++;
-        rate = shotCount > 0 ? (float)hitCount / (float)shotCount * 100f : 100f;
-        rateUI.text = ((int)rate).ToString() + "%";
+        mShotToShot++;
       });
       disp2 = mTargetManager.onTargetBreak.Subscribe(_ =>{
         hitCount++;
-        score += 100;
-        scoreUI.text = score.ToString();
+        if (mShotToShot == 0) oddCurve.AddTime(1);
+        else oddCurve.AddTime(-mShotToShot);
+        score += (int)(oddCurve.GetValue() * 100);
+        mShotToShot = -1;
       });
       mTimer.whenTimeIsUp.Subscribe(time =>{
         disp1.Dispose();
@@ -70,13 +107,15 @@ namespace My {
       });
     }
     void Reset() {
+      mShotToShot = 0;
       score = 0;
       rate = 100;
       hitCount = 0;
-      shotCount = -1;
+      shotCount = 0;
       scoreUI.text = score.ToString();
       rateUI.text = ((int)rate).ToString() + "%";
     }
+
     void Quit() {
       #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
@@ -85,5 +124,4 @@ namespace My {
       #endif
     }
   }
-
 }

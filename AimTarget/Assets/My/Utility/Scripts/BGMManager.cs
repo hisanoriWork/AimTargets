@@ -22,6 +22,23 @@ namespace My {
     }
     protected static BGMManager m_instance;
     /**********/
+    public int volume {
+      get { return mVolume; }
+      set {
+        mVolume = Mathf.Clamp(value, 0, 100);
+        m_audioSource.volume = mVolume / 100f;
+        PlayerPrefs.SetInt("BGMVolume", mVolume);
+      }
+    }
+    public float volumef {
+      get { return mVolume / 100f; }
+      set {
+        mVolume = (int)(Mathf.Clamp(value, 0, 1f) * 100f);
+        m_audioSource.volume = Mathf.Clamp(value, 0, 1f);
+        PlayerPrefs.SetInt("BGMVolume", mVolume);
+      }
+    }
+    protected int mVolume;
     [SerializeField] protected AudioSource m_audioSource;
     [SerializeField] protected List<AudioClipInfo> m_clipList;
     protected Dictionary<string, AudioClip> m_clipDictionary = new Dictionary<string, AudioClip>();
@@ -36,14 +53,7 @@ namespace My {
         m_clipDictionary[i.name] = i.clip;
       m_clipList.Clear();
 
-      m_audioSource.volume = PlayerPrefs.GetFloat("BGMVolume", 0.4f);
-    }
-    public void SetVolume(float value) {
-      m_audioSource.volume = value;
-      PlayerPrefs.SetFloat("BGMVolume", value);
-    }
-    public float GetVolume() {
-      return m_audioSource.volume;
+      volume = PlayerPrefs.GetInt("BGMVolume", 40);
     }
     public void Play(AudioClip clip) {
       if (clip && clip != m_audioSource.clip) {

@@ -7,8 +7,9 @@ namespace My {
   [System.Serializable]
   public class Curve {
     [SerializeField] public AnimationCurve curve;
+    [SerializeField] public float maxt = 1.0f;
     private float t = 0.0f;
-    private float maxt = 1.0f;
+    
 
     public void SetMax(float T) { maxt = T; }
     public void AddTime(float dt) {

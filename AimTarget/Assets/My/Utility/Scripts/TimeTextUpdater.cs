@@ -7,15 +7,18 @@ using UniRx;
 namespace My {
   public class TimeTextUpdater : MonoBehaviour {
     public Timer timer;
-    Text mText;
+    public Text text;
     public bool isUpdating = true;
     void Awake() {
-      mText = GetComponent<Text>();
       timer.onDigitalTimeChanged.Where(_ => isUpdating).Subscribe(time => TextUpdate(time));
     }
 
+    void Start() {
+      TextUpdate(timer.digitalTime);
+    }
+
     public void TextUpdate(int i) {
-      mText.text = i.ToString();
+      text.text = i.ToString();
     }
   }
 }

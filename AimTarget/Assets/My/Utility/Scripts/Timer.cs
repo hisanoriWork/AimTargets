@@ -7,13 +7,7 @@ using UnityEngine.Events;
 
 namespace My {
   public class Timer : MonoBehaviour {
-    [System.Serializable]
-    public class MyIntEvent : UnityEvent<int> {
-    }
-
-    [System.Serializable]
-    public class MyFloatEvent : UnityEvent<float> {
-    }
+    
     public MyIntEvent onDigitalCountEvent;
     public MyFloatEvent onAnalogCountEvent;
     public UnityEvent onTimeUpEvent;

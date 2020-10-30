@@ -8,23 +8,35 @@ namespace My {
     /*****public field*****/
     public float pitchSpeed { get; set; }
     public float yawSpeed { get; set; }
+    public int dpi {
+      get { return mDPI; }
+      set {
+        mDPI = Mathf.Clamp(value, 1, 100);
+        PlayerPrefs.SetInt("DPI",mDPI);
+      }
+    }
     public LineRenderer lineRenderer;
     public Transform shotT;
     public Transform cameraT;
     /*****private field*****/
     float mFwdSpeed;
     float mStfSpeed;
+    int mDPI;
     RaycastHit mRaycastHit;
+    MousePointee mMousePointee = null;
     MousePointee mBeforeMousePointee = null;
     /*****event field*****/
     public IObservable<Unit> onShot { get { return mShotSubject; } }
     protected Subject<Unit> mShotSubject = new Subject<Unit>();
     /*****monobehaviour method*****/
+    void Awake() {
+      dpi = PlayerPrefs.GetInt("DPI", 20);
+    }
     void Update() {
       ComputeMousePoint();
-      MouseEvent();
       if (Input.GetMouseButtonDown(0))
         Shot();
+      MouseEvent();
     }
     void FixedUpdate() {
       CheckMove();
@@ -61,8 +73,8 @@ namespace My {
     }
     void CheckRotate() {
       float dt = Time.fixedDeltaTime;
-      pitchSpeed = 200 * -Input.GetAxis("Mouse Y");
-      yawSpeed = 200 * Input.GetAxis("Mouse X");
+      pitchSpeed = dpi*10 * -Input.GetAxis("Mouse Y");
+      yawSpeed = dpi*10 * Input.GetAxis("Mouse X");
       transform.rotation = Quaternion.AngleAxis(yawSpeed * dt, transform.up) * transform.rotation;
     }
     void ComputeMousePoint() {
@@ -77,24 +89,25 @@ namespace My {
     }
     void MouseEvent() {
       if (!mRaycastHit.transform) {
+        mMousePointee = null;
         mBeforeMousePointee = null;
         return;
       }
-      MousePointee m = mRaycastHit.transform.GetComponent<MousePointee>();
-      if (mBeforeMousePointee != null && mBeforeMousePointee != m)
+      mMousePointee = mRaycastHit.transform.GetComponent<MousePointee>();
+      if (mBeforeMousePointee != null && mBeforeMousePointee != mMousePointee)
         mBeforeMousePointee.offEvent.Invoke();
-      if (m == null) {
+      if (mMousePointee == null) {
         mBeforeMousePointee = null;
         return;
       }
-      m.onEvent.Invoke();
+      mMousePointee.onEvent.Invoke();
       if (Input.GetMouseButton(0))
-        m.clickEvent.Invoke();
+        mMousePointee.clickEvent.Invoke();
       if (Input.GetMouseButtonDown(0))
-        m.downEvent.Invoke();
+        mMousePointee.downEvent.Invoke();
       if (Input.GetMouseButtonUp(0))
-        m.upEvent.Invoke();
-      mBeforeMousePointee = m;
+        mMousePointee.upEvent.Invoke();
+      mBeforeMousePointee = mMousePointee;
       return;
     }
     void Shot() {

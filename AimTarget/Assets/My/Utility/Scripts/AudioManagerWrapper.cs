@@ -4,21 +4,18 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace My {
-
   public class AudioManagerWrapper : MonoBehaviour {
-    public Slider SESlider;
-    public Slider BGMSlider;
-    void Start() {
-      SESlider.value = SEManager.instance.GetVolume();
-      BGMSlider.value = BGMManager.instance.GetVolume();
+    public void SetSEVolume(int value) {
+      SEManager.instance.volume = value;
     }
-    public void SetSEVolume() {
-      if (SESlider)
-        SEManager.instance.SetVolume(SESlider.value);
+    public void SetBGMVolume(int value) {
+      BGMManager.instance.volume = value;
     }
-    public void SetBGMVolume() {
-      if (BGMSlider)
-        BGMManager.instance.SetVolume(BGMSlider.value);
+    public void AddSEVolume(int value) {
+      SEManager.instance.volume += value;
+    }
+    public void AddBGMVolume(int value) {
+      BGMManager.instance.volume += value;
     }
     public void PlaySE(string clipname) {
       SEManager.instance.Play(clipname);
