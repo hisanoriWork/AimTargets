@@ -6,6 +6,9 @@ using UniRx;
 namespace My {
   public class FPSPlayer : MonoBehaviour {
     /*****public field*****/
+    public float fwdSpeed;
+    public float stfSpeed;
+    public float backSpeed;
     public float pitchSpeed { get; set; }
     public float yawSpeed { get; set; }
     public int dpi {
@@ -19,9 +22,9 @@ namespace My {
     public Transform shotT;
     public Transform cameraT;
     public Timer FootstepsTimer;
+    public SimpleShoot simpleShoot;
     /*****private field*****/
-    float mFwdSpeed;
-    float mStfSpeed;
+    
     int mDPI;
     RaycastHit mRaycastHit;
     MousePointee mMousePointee = null;
@@ -60,26 +63,44 @@ namespace My {
     void CheckMove() {
       float dt = Time.fixedDeltaTime;
       Vector3 pos = transform.position;
-      mFwdSpeed = 0.0f; mStfSpeed = 0.0f;
+      int fwd = 0, stf = 0;
+      float xSpeed = 0.0f;
+      bool isMoving = false;
+      /*input*/
       if (Input.GetKey(KeyCode.W))
-        mFwdSpeed += 7.0f;
+        fwd += 1;
       if (Input.GetKey(KeyCode.S))
-        mFwdSpeed -= 7.0f;
+        fwd -= 1;
       if (Input.GetKey(KeyCode.A))
-        mStfSpeed -= 5.0f;
+        stf -= 1;
       if (Input.GetKey(KeyCode.D))
-        mStfSpeed += 5.0f;
-      if (mFwdSpeed * mFwdSpeed > 0.01f) {
-        pos += transform.forward * mFwdSpeed * dt;
+        stf += 1;
+      /*前後の速さ決定*/
+      if (fwd > 0) xSpeed = fwdSpeed;
+      else if (fwd == 0) xSpeed = 0f;
+      else xSpeed = backSpeed;
+      /*移動*/
+      if (fwd * fwd > 0 && stf * stf > 0) {
+        pos += (float)fwd * transform.forward * Mathf.Lerp(xSpeed, stfSpeed, 0.5f) * dt;
+        pos += stf * transform.right * Mathf.Lerp(xSpeed, stfSpeed, 0.5f) * dt;
+        isMoving = true;
+      } else if(fwd != 0 && stf == 0){
+        pos += fwd * transform.forward * xSpeed * dt;
+        isMoving = true;
+      } else if (fwd == 0 && stf != 0){
+        pos += stf* transform.right * stfSpeed* dt;
+        isMoving = true;
+      }
+      if (isMoving) {
+        transform.position = pos;
         mMoveSubject.OnNext(Unit.Default);
         FootstepsTimer.Play();
+        isMoving = false;
       } else {
         FootstepsTimer.Stop();
       }
-      if (mStfSpeed * mStfSpeed > 0.01f)
-        pos += transform.right * mStfSpeed * dt;
-      transform.position = pos;
-    }
+
+    } 
     void CheckRotate() {
       float dt = Time.fixedDeltaTime;
       pitchSpeed = dpi*10 * -Input.GetAxis("Mouse Y");
@@ -120,6 +141,7 @@ namespace My {
       return;
     }
     void Shot() {
+      simpleShoot.ToShootAnimation();
       mShotSubject.OnNext(Unit.Default);
       SEManager.instance.Play("ハンドガン");
     }
