@@ -27,6 +27,7 @@ namespace My {
     public Transform cameraT;
     public Timer FootstepsTimer;
     public SimpleShoot simpleShoot;
+    public bool useLaser = true;
     /*****private field*****/
     
     int mDPI;
@@ -117,7 +118,7 @@ namespace My {
       if (cameraT) {
         Physics.Raycast(cameraT.position, cameraT.forward, out mRaycastHit);
       }
-      if (lineRenderer) {
+      if (lineRenderer && useLaser) {
         lineRenderer.enabled = true;
         lineRenderer.SetPosition(0, shotT.position);
         if (mRaycastHit.transform)

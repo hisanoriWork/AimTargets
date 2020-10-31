@@ -64,13 +64,11 @@ namespace My {
     int mShotCount;
     int mHitCount;
     int mShotToShot = 0;
-    float mAimTime = 0;
-    float onTime = 0;
-    float offTime = 0;
     TargetManager mTargetManager;
     Timer mTimer;
     /*****monobehaviour method*****/
     void Awake() {
+      BGMManager.instance.Play("Mercury");
       mTargetManager = GetComponent<TargetManager>();
       mTimer = GetComponent<Timer>();
       player.SetMouseCursorVisible(false);
@@ -78,7 +76,6 @@ namespace My {
       Reset();
     }
     void Start() {
-      BGMManager.instance.Play("Mercury");
     }
     void Update() {
       if (Input.GetKey(KeyCode.Escape)) Quit();
@@ -224,9 +221,6 @@ namespace My {
       rate = 100;
       hitCount = 0;
       shotCount = 0;
-      mAimTime = 0;
-      onTime = 0;
-      offTime = 0;
       scoreUI.text = score.ToString();
       rateUI.text = ((int)rate).ToString() + "%";
     }

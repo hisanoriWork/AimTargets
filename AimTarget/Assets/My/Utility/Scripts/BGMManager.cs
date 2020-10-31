@@ -96,11 +96,11 @@ namespace My {
     }
 
     public void PlayNext() {
-      m_listIndex = Mathf.Clamp(m_listIndex + 1, 0, m_clipList.Count());
+      m_listIndex = Mathf.Clamp(m_listIndex + 1, 0, m_clipList.Count()-1);
       Play(m_clipList[m_listIndex].clip);
     }
     public void PlayBack() {
-      m_listIndex = Mathf.Clamp(m_listIndex - 1, 0, m_clipList.Count());
+      m_listIndex = Mathf.Clamp(m_listIndex - 1, 0, m_clipList.Count()-1);
       Play(m_clipList[m_listIndex].clip);
     }
     public void Stop() {

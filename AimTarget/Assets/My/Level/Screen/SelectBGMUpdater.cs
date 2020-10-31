@@ -9,7 +9,7 @@ public class SelectBGMUpdater : MonoBehaviour
   public MousePointee pointee;
  
   void Awake() {
-    pointee.onEvent.AddListener(TextUpdate);
+    pointee.downEvent.AddListener(TextUpdate);
   }
   void Start() {
     TextUpdate();
