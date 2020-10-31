@@ -16,6 +16,9 @@ namespace My {
     public GameObject settingScreen;
     public Canvas gameCanvas;
     public ResultController resultController;
+    public GameObject pointObj;
+    public Transform cameraT;
+    public Vector3 displayPointPos;
     /*Game*/
     public FPSPlayer player;
     public Curve oddCurve;
@@ -64,6 +67,9 @@ namespace My {
       mTimer.Stop();
       Reset();
     }
+    void Start() {
+      BGMManager.instance.Play("Mercury");
+    }
     void Update() {
       if (Input.GetKey(KeyCode.Escape)) Quit();
     }
@@ -97,9 +103,17 @@ namespace My {
       disp2 = mTargetManager.onTargetBreak.Subscribe(_ =>{
         hitCount++;
         if (mShotToShot == 0) oddCurve.AddTime(1);
-        else oddCurve.AddTime(-mShotToShot);
-        score += (int)(oddCurve.GetValue() * 100);
+        else oddCurve.AddTime(-mShotToShot*2);
+        int point = (int)(oddCurve.GetValue() * 100);
+        score += point;
         mShotToShot = -1;
+        GameObject obj = Instantiate(pointObj, player.raycastHitPos, Quaternion.identity);
+        DisplayPoint displayPoint = obj.GetComponent<DisplayPoint>();
+        if(displayPoint){
+          displayPoint.TextUpdate(point);
+          obj.transform.rotation = Quaternion.LookRotation(cameraT.forward);
+          obj.transform.position += displayPointPos;
+        }
       });
       mTimer.whenTimeIsUp.Subscribe(time =>{
         disp1.Dispose();

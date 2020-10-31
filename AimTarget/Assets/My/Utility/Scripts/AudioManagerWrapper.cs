@@ -26,5 +26,11 @@ namespace My {
     public void ReplayBGM(string clipname) {
       BGMManager.instance.Replay(clipname);
     }
+    public void PlayNextBGM() {
+      BGMManager.instance.PlayNext();
+    }
+    public void PlayBackBGM() {
+      BGMManager.instance.PlayBack();
+    }
   }
 }

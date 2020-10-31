@@ -11,6 +11,10 @@ namespace My {
     public float backSpeed;
     public float pitchSpeed { get; set; }
     public float yawSpeed { get; set; }
+    public Vector3 raycastHitPos { get {
+        if (mRaycastHit.transform) return mRaycastHit.point;
+        return Vector3.zero;
+    }}
     public int dpi {
       get { return mDPI; }
       set {

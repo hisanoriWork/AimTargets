@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace My {
@@ -39,7 +40,10 @@ namespace My {
       }
     }
     protected int mVolume;
+    public string　audioName{get{return m_audioName;}}    
     [SerializeField] protected AudioSource m_audioSource;
+    [SerializeField] protected string m_audioName;
+    [SerializeField] protected int m_listIndex = -1;
     [SerializeField] protected List<AudioClipInfo> m_clipList;
     protected Dictionary<string, AudioClip> m_clipDictionary = new Dictionary<string, AudioClip>();
     void Awake() {
@@ -51,19 +55,33 @@ namespace My {
 
       foreach (var i in m_clipList)
         m_clipDictionary[i.name] = i.clip;
-      m_clipList.Clear();
+      //m_clipList.Clear();
 
       volume = PlayerPrefs.GetInt("BGMVolume", 40);
     }
     public void Play(AudioClip clip) {
       if (clip && clip != m_audioSource.clip) {
         m_audioSource.clip = clip;
+        int i = 0;
+        foreach (var info in m_clipList) {
+          if (info.clip == clip) {
+            m_audioName = info.name;
+            m_listIndex = i;
+            break;
+          }
+          i++;
+        }
+        if (i == m_clipList.Count()) {
+          m_audioName = "NULL";
+          m_listIndex = -1;
+        }
         m_audioSource.Play();
       }
     }
     public void Play(string clipName) {
-      if (m_clipDictionary.ContainsKey(clipName))
+      if (m_clipDictionary.ContainsKey(clipName)) {
         Play(m_clipDictionary[clipName]);
+      }
     }
     public void Replay(AudioClip clip) {
       if (clip) {
@@ -75,6 +93,15 @@ namespace My {
     public void Replay(string clipName) {
       if (m_clipDictionary.ContainsKey(clipName))
         Replay(m_clipDictionary[clipName]);
+    }
+
+    public void PlayNext() {
+      m_listIndex = Mathf.Clamp(m_listIndex + 1, 0, m_clipList.Count());
+      Play(m_clipList[m_listIndex].clip);
+    }
+    public void PlayBack() {
+      m_listIndex = Mathf.Clamp(m_listIndex - 1, 0, m_clipList.Count());
+      Play(m_clipList[m_listIndex].clip);
     }
     public void Stop() {
       m_audioSource.Stop();
