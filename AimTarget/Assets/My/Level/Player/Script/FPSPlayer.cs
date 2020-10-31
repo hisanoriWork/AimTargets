@@ -38,6 +38,8 @@ namespace My {
     protected Subject<Unit> mShotSubject = new Subject<Unit>();
     public IObservable<Unit> onMove { get { return mMoveSubject; } }
     protected Subject<Unit> mMoveSubject = new Subject<Unit>();
+    public IObservable<Unit> onOff { get { return mOffSubject; } }
+    protected Subject<Unit> mOffSubject = new Subject<Unit>();
     /*****monobehaviour method*****/
     void Awake() {
       dpi = PlayerPrefs.GetInt("DPI", 20);
@@ -131,8 +133,10 @@ namespace My {
         return;
       }
       mMousePointee = mRaycastHit.transform.GetComponent<MousePointee>();
-      if (mBeforeMousePointee != null && mBeforeMousePointee != mMousePointee)
+      if (mBeforeMousePointee != null && mBeforeMousePointee != mMousePointee) {
         mBeforeMousePointee.offEvent.Invoke();
+        mOffSubject.OnNext(Unit.Default);
+      }
       if (mMousePointee == null) {
         mBeforeMousePointee = null;
         return;

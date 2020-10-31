@@ -11,6 +11,10 @@ namespace My {
     public bool dataExists;
     public int[] score = new int[6];
     public float[] rate = new float[6];
+    public int[] score1 = new int[6];
+    public float[] rate1 = new float[6];
+    public int[] score2 = new int[6];
+    public float[] rate2 = new float[6];
   }
   public class PrefsManager {
     UserPrefs mUserPrefs = new UserPrefs();

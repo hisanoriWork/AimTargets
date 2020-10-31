@@ -6,8 +6,15 @@ using UniRx;
 using UnityEngine.UI;
 
 namespace My {
+  public enum GameType {
+    EFlick,
+    E3thTarget,
+    ETracking,
+    ENone,
+  }
   public class GameManager : MonoBehaviour {
     /*****public field*****/
+    
     /*UI*/
     public Text scoreUI;
     public Text rateUI;
@@ -20,6 +27,7 @@ namespace My {
     public Transform cameraT;
     public Vector3 displayPointPos;
     /*Game*/
+    public GameType gameType = GameType.ENone;
     public FPSPlayer player;
     public Curve oddCurve;
     public float rate {
@@ -56,13 +64,15 @@ namespace My {
     int mShotCount;
     int mHitCount;
     int mShotToShot = 0;
+    float mAimTime = 0;
+    float onTime = 0;
+    float offTime = 0;
     TargetManager mTargetManager;
     Timer mTimer;
     /*****monobehaviour method*****/
     void Awake() {
       mTargetManager = GetComponent<TargetManager>();
       mTimer = GetComponent<Timer>();
-      //startScreen.SetActive(true);
       player.SetMouseCursorVisible(false);
       mTimer.Stop();
       Reset();
@@ -77,23 +87,52 @@ namespace My {
     public void StartGame() {
       Reset();
       mTimer.Play();
-      TriggerGameSet();
-      TriggerGameDataRegister();
-      mTargetManager.CreateTarget();
-      mTargetManager.CreateTarget();
-      mTargetManager.CreateTarget();
+      switch (gameType) {
+        case GameType.E3thTarget:
+          SetGameSetTrigger();
+          SetScoreTrigger();
+          Set3thTargetGameTrigger();
+          mTargetManager.Create3thTarget();
+          mTargetManager.Create3thTarget();
+          mTargetManager.Create3thTarget();
+          break;
+        case GameType.EFlick:
+          SetGameSetTrigger();
+          SetScoreTrigger();
+          SetFlickGameTrigger();
+          mTargetManager.CreateFlickTarget();
+          break;
+        case GameType.ETracking:
+          SetGameSetTrigger();
+          SetScoreTrigger2();
+          SetTrackingGameTrigger();
+          mTargetManager.CreateTrackingTarget();
+          break;
+      }
+    }
+    public void SetGameType_3thTarget() {
+      gameType = GameType.E3thTarget;
+      resultController.SetResult(gameType);
+    }
+    public void SetGameType_Flick() {
+      gameType = GameType.EFlick;
+      resultController.SetResult(gameType);
+    }
+    public void SetGameType_Tracking() {
+      gameType = GameType.ETracking;
+      resultController.SetResult(gameType);
     }
     /*****private method*****/
-    void TriggerGameSet() {
+    void SetGameSetTrigger() {
       mTimer.whenTimeIsUp.Take(1).Subscribe(time => {
         resultScreen.SetActive(true);
         settingScreen.SetActive(true);
         mTargetManager.ClearTarget();
-        resultController.Register(score, rate);
+        resultController.Register(score, rate,gameType);
         Reset();
       });
     }
-    void TriggerGameDataRegister() {
+    void SetScoreTrigger() {
       IDisposable disp1;
       IDisposable disp2;
       disp1 = player.onShot.Subscribe(_ =>{
@@ -120,12 +159,74 @@ namespace My {
         disp2.Dispose();
       });
     }
+    void SetScoreTrigger2() {
+      int sumPoint = 0;
+      IDisposable disp1 = mTargetManager.onTargetDamege.Subscribe(_ => {
+        oddCurve.AddTime(0.01f);
+        int point = (int)(oddCurve.GetValue() * 2);
+        score += point;
+        sumPoint += point;
+        shotCount++;
+        hitCount++;
+      });
+
+      IDisposable disp2 = mTargetManager.onTargetDestroy.Subscribe(_ =>{
+        GameObject obj = Instantiate(pointObj, player.raycastHitPos, Quaternion.identity);
+        DisplayPoint displayPoint = obj.GetComponent<DisplayPoint>();
+        if (displayPoint) {
+          displayPoint.TextUpdate(sumPoint);
+          obj.transform.rotation = Quaternion.LookRotation(cameraT.forward);
+          obj.transform.position += displayPointPos;
+          sumPoint = 0;
+        }
+      });
+
+      IDisposable disp3 = player.onOff.Subscribe(_ => {
+        oddCurve.AddTime(-0.1f);
+        shotCount++;
+      });
+      mTimer.whenTimeIsUp.Subscribe(time => {
+        disp1.Dispose();
+        disp2.Dispose();
+        disp3.Dispose();
+      });
+    }
+    void Set3thTargetGameTrigger() {
+      IDisposable disp = mTargetManager.onTargetDestroy.Subscribe(_ =>
+      {
+        while (mTargetManager.num <= 3) mTargetManager.Create3thTarget();
+      });
+      mTimer.whenTimeIsUp.Subscribe(time => {
+        disp.Dispose();
+      });
+    }
+
+    void SetFlickGameTrigger() {
+      IDisposable disp1 = mTargetManager.onTargetDestroy.Subscribe(_ =>{
+        while (mTargetManager.num <= 1) mTargetManager.CreateFlickTarget();
+      });
+      mTimer.whenTimeIsUp.Subscribe(time => {
+        disp1.Dispose();
+      });
+    }
+
+    void SetTrackingGameTrigger() {
+      IDisposable disp1 = mTargetManager.onTargetDestroy.Subscribe(_ => {
+        while (mTargetManager.num <= 1) mTargetManager.CreateTrackingTarget();
+      });
+      mTimer.whenTimeIsUp.Subscribe(time => {
+        disp1.Dispose();
+      });
+    }
     void Reset() {
       mShotToShot = 0;
       score = 0;
       rate = 100;
       hitCount = 0;
       shotCount = 0;
+      mAimTime = 0;
+      onTime = 0;
+      offTime = 0;
       scoreUI.text = score.ToString();
       rateUI.text = ((int)rate).ToString() + "%";
     }

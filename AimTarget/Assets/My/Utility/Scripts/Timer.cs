@@ -11,7 +11,6 @@ namespace My {
     public MyIntEvent onDigitalCountEvent;
     public MyFloatEvent onAnalogCountEvent;
     public UnityEvent onTimeUpEvent;
-    [Range(0, 1000)] public float time;
     public bool isReturning = true;
     public bool isRooping = false;
     public float analogTime { get { return m_analogTime; } }
@@ -25,14 +24,13 @@ namespace My {
     private Subject<int> digitalSubject = new Subject<int>();
     private Subject<float> analogSubject = new Subject<float>();
     private Subject<Unit> isUpSubject = new Subject<Unit>();
-    private float m_time;
+    [SerializeField] [Range(0, 1000)] private float m_time;
     private float m_analogTime = 100f;
     private int m_digitalTime = 100;
     /*****monoBehaviour method*****/
     void Awake() {
-      m_time = time;
-      m_analogTime = time;
-      m_digitalTime = (int)time;
+      m_analogTime = m_time;
+      m_digitalTime = (int)m_time;
     }
     void FixedUpdate() {
       if (isPlaying & m_analogTime > 0f) {
@@ -64,6 +62,10 @@ namespace My {
     public void Reset() {
       m_analogTime = m_time;
       m_digitalTime = (int)m_time;
+    }
+
+    public void SetTime(float time) {
+      m_time = time;
     }
   }
 }
