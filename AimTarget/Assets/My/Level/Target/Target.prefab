@@ -110,6 +110,8 @@ MonoBehaviour:
   HP: 100
   maxHP: 100
   instant: 1
+  BreakeFXPrefab: {fileID: 4853600625348680588, guid: 535bc13ce3cf5574d8b7b753546114bc,
+    type: 3}
 --- !u!114 &3505137487380032393
 MonoBehaviour:
   m_ObjectHideFlags: 0

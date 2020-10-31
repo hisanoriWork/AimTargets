@@ -109,12 +109,15 @@ namespace My {
     }
     void ComputeMousePoint() {
       if (cameraT) {
-        //lineRenderer.SetPosition(0, shotT.position);
         Physics.Raycast(cameraT.position, cameraT.forward, out mRaycastHit);
-        //if (mRaycastHit.transform)
-        //    lineRenderer.SetPosition(1, mRaycastHit.point);
-        //else
-        //    lineRenderer.SetPosition(1, cameraT.position + cameraT.forward * 10000f);
+      }
+      if (lineRenderer) {
+        lineRenderer.enabled = true;
+        lineRenderer.SetPosition(0, shotT.position);
+        if (mRaycastHit.transform)
+          lineRenderer.SetPosition(1, mRaycastHit.point);
+        else
+          lineRenderer.SetPosition(1, cameraT.position + cameraT.forward * 10000f);
       }
     }
     void MouseEvent() {

@@ -13,6 +13,7 @@ namespace My {
     protected Subject<Unit> mBreakSubject = new Subject<Unit>();
     public IObservable<Unit> onDamage { get { return mDamageSubject; } }
     protected Subject<Unit> mDamageSubject = new Subject<Unit>();
+    public GameObject BreakeFXPrefab;
     public void Damage(int i) {
       SEManager.instance.Play("TargetHit");
       mDamageSubject.OnNext(Unit.Default);
@@ -27,6 +28,7 @@ namespace My {
       }
     }
     public void Break() {
+      Instantiate(BreakeFXPrefab,transform.position, Quaternion.identity);
       mBreakSubject.OnNext(Unit.Default);
       Destroy(gameObject);
     }
