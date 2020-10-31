@@ -63,6 +63,8 @@ namespace My {
     }
 
     public void SetResult(GameType type) {
+      mysr.SetScore("---");
+      mysr.SetRate("--- ");
       UserPrefs user = prefsManager.GetUserPrefs();
       if (type == GameType.E3thTarget) {
         scoreList = user.score;

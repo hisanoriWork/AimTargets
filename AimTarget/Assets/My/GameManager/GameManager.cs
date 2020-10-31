@@ -163,7 +163,7 @@ namespace My {
       int sumPoint = 0;
       IDisposable disp1 = mTargetManager.onTargetDamege.Subscribe(_ => {
         oddCurve.AddTime(0.01f);
-        int point = (int)(oddCurve.GetValue() * 2);
+        int point = (int)(oddCurve.GetValue()*1.5);
         score += point;
         sumPoint += point;
         shotCount++;
@@ -182,7 +182,7 @@ namespace My {
       });
 
       IDisposable disp3 = player.onOff.Subscribe(_ => {
-        oddCurve.AddTime(-0.1f);
+        oddCurve.AddTime(-1.0f);
         shotCount++;
       });
       mTimer.whenTimeIsUp.Subscribe(time => {

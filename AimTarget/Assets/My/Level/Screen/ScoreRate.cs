@@ -16,9 +16,16 @@ namespace My{
       score.text = s.ToString();
     }
 
+    public void SetScore(string s) {
+      score.text = s;
+    }
     public void SetRate(float i) {
       r = i;
       rate.text = ((int)r).ToString() + "%";
+    }
+
+    public void SetRate(string s) {
+      rate.text = s + "%";
     }
   }
 }

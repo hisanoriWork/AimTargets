@@ -54,7 +54,7 @@ namespace My {
       foreach (var i in m_clipList)
         m_clipDictionary[i.name] = i.clip;
       m_clipList.Clear();
-      volume = PlayerPrefs.GetInt("SEVolume", 40);
+      volume = PlayerPrefs.GetInt("SEVolume", 100);
     }
 
     void Update() {

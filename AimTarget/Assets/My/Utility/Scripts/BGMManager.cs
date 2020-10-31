@@ -57,7 +57,7 @@ namespace My {
         m_clipDictionary[i.name] = i.clip;
       //m_clipList.Clear();
 
-      volume = PlayerPrefs.GetInt("BGMVolume", 40);
+      volume = PlayerPrefs.GetInt("BGMVolume", 60);
     }
     public void Play(AudioClip clip) {
       if (clip && clip != m_audioSource.clip) {

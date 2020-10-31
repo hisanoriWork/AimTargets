@@ -109,8 +109,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 594f75c368276404faff636434ff9c7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP: 500
-  maxHP: 500
+  HP: 1000
+  maxHP: 1000
   instant: 0
   BreakeFXPrefab: {fileID: 4853600625348680588, guid: 535bc13ce3cf5574d8b7b753546114bc,
     type: 3}
