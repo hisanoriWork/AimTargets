@@ -28,8 +28,11 @@ public class SelectCrosshair : MonoBehaviour
   }
 
   public void BackCrosshair() {
-    index = Mathf.Clamp(index - 1, 0, list.Count() - 1);
-    image.sprite = list[index];
+    index = Mathf.Clamp(index - 1, -1, list.Count() - 1);
+    if (index >= 0) {
+      image.sprite = list[index];
+      image.gameObject.SetActive(true);
+    } else image.gameObject.SetActive(false);
     TextUpdate();
   }
   public void TextUpdate() {
